@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServer", "AuthorizationServer\AuthorizationServer.csproj", "{133DA7B8-2467-4799-9CC9-E799A85C0A02}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuthClient", "OAuthClient\OAuthClient.csproj", "{06253ABA-129A-40FC-8D6F-25BA2D8CF2CC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceServer", "ResourceServer\ResourceServer.csproj", "{F2415B20-3709-4945-8836-09150653A8AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServer", "AuthorizationServer\AuthorizationServer.csproj", "{0B35A256-4589-48A2-9A67-300CC74EC7CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,10 +12,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{133DA7B8-2467-4799-9CC9-E799A85C0A02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{133DA7B8-2467-4799-9CC9-E799A85C0A02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{133DA7B8-2467-4799-9CC9-E799A85C0A02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{133DA7B8-2467-4799-9CC9-E799A85C0A02}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06253ABA-129A-40FC-8D6F-25BA2D8CF2CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{06253ABA-129A-40FC-8D6F-25BA2D8CF2CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06253ABA-129A-40FC-8D6F-25BA2D8CF2CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -24,5 +20,9 @@ Global
 		{F2415B20-3709-4945-8836-09150653A8AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2415B20-3709-4945-8836-09150653A8AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2415B20-3709-4945-8836-09150653A8AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B35A256-4589-48A2-9A67-300CC74EC7CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B35A256-4589-48A2-9A67-300CC74EC7CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B35A256-4589-48A2-9A67-300CC74EC7CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B35A256-4589-48A2-9A67-300CC74EC7CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
