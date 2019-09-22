@@ -24,9 +24,12 @@ namespace AuthorizationServer.TokenManagement
                 Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new JwtToken() { Name = "Kazim Ozkurt" }));
             var payloadBase = Base64UrlEncoder.Encode(payloadBytes);
 
-            var payload = headerBase + "." + payloadBase;
-            Console.WriteLine(payload);
-
+            var hmac = HMACSHA256.Create();
+            hmac.Key = Encoding.UTF8.GetBytes("youtube");
+            var payload = Encoding.UTF8.GetBytes(headerBase + "." + payloadBase);
+            var signatureBytes = hmac.ComputeHash(payload);
+            var signatureBase64 = Base64UrlEncoder.Encode(signatureBytes);
+            Console.WriteLine(signatureBase64);
         }
     }
 
