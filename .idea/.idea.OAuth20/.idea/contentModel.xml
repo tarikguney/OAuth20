@@ -10,7 +10,11 @@
         <e p="AuthorizationServer.csproj" t="IncludeRecursive" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
-          <e p="ValuesController.cs" t="Include" />
+          <e p="OAuthController.cs" t="Include" />
+        </e>
+        <e p="IdentityManagement" t="Include">
+          <e p="ClientManager.cs" t="Include" />
+          <e p="IClientManager.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -24,6 +28,11 @@
           <e p="launchSettings.json" t="Include" />
         </e>
         <e p="Startup.cs" t="Include" />
+        <e p="TokenManagement" t="Include">
+          <e p="HmacAlgorithm.cs" t="Include" />
+          <e p="IJWTTokenGenerator.cs" t="Include" />
+          <e p="JwtToken.cs" t="Include" />
+        </e>
       </e>
       <e p="OAuth20.sln" t="IncludeFlat" />
       <e p="OAuthClient" t="IncludeRecursive">
