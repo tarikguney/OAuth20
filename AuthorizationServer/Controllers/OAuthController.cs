@@ -6,7 +6,9 @@ using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.TokenManagement;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace AuthorizationServer.Controllers
 {
@@ -62,11 +64,9 @@ namespace AuthorizationServer.Controllers
 
         public class ErrorResponse
         {
-            [IgnoreDataMember]
-            public ErrorTypeEnum Error { private get; set; }
-            
             [JsonProperty("error")]
-            public string ErrorFormatted => Enum.GetName(typeof(ErrorTypeEnum), Error);
+            [JsonConverter(typeof(StringEnumConverter))]
+            public ErrorTypeEnum Error { get; set; }
 
             [JsonProperty("error_description")]
             public string ErrorDescription { get; set; }
