@@ -2,6 +2,14 @@
 
 The idea of this project is to write a simple OAuth 2.0 Authorization Server. Don't expect too much. It is progressing with baby steps.
 
+## Specifications
+
+This project uses the following RFC documents as the specification for its implementation. The idea is to comply with the specs as much as possible with little or no diversion. 
+
+- [RFC 6749](https://tools.ietf.org/html/rfc6749) - The OAuth 2.0 Authorization Framework
+- [RFC 7519](https://tools.ietf.org/html/rfc7519) - JSON Web Token (JWT)
+- [RFC 6750](https://tools.ietf.org/html/rfc6750) - The OAuth 2.0 Authorization Framework: Bearer Token Usage
+
 ## Sample Postman Scripts
 
 The postman scripts will get updated as the code progress. 
@@ -12,9 +20,14 @@ The postman scripts will get updated as the code progress.
 
 The access token format this project uses is JWT bearer token. Therefore, you can verify the token there: https://www.jsonwebtoken.io/
 
-The secret used in the HMAC signature digest is `guney`. Silly but works for now.
+The secret used in the HMAC signature digest is `client_id`. Silly, but it is how things work for now.
+
+## Contribute
+
+I always welcome PRs from the community. As you may know, this project is developed during live streams on my channel at http://youtube.com/tarikguneyphd. Currently, the videos are in Turkish but perhaps later we can have a summary video in English, too. Anyhow, please feel free to send me pull requests. 
 
 ## Changes `(order by timestamp desc)`
 
-- JWT Token generation is now working.
-- Tested with Postman and works nice! Try it yourself
+- **[10/06/2019]** Returning correctly formatted response for `access_token` request for both successful and erroneous  situations.
+- [Older Date] JWT Token generation is now working.
+- [Older Date] Tested with Postman and works nice! Try it yourself
