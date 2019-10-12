@@ -30,6 +30,8 @@ namespace AuthorizationServer
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IClientManager, ClientManager>();
             services.AddSingleton<IJWTTokenGenerator, JwtTokenGenerator>();
+            services.AddSingleton<IAuthorizationCodeGenerator, AuthorizationCodeGenerator>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

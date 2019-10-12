@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Web;
 using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.TokenManagement;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,13 @@ namespace AuthorizationServer.Controllers
     {
         private readonly IClientManager _clientManager;
         private readonly IJWTTokenGenerator _jwtTokenGenerator;
+        private readonly IAuthorizationCodeGenerator _authCodeGenerator;
 
-        public OAuthController(IClientManager clientManager, IJWTTokenGenerator jwtTokenGenerator)
+        public OAuthController(IClientManager clientManager, IJWTTokenGenerator jwtTokenGenerator, IAuthorizationCodeGenerator authCodeGenerator)
         {
             _clientManager = clientManager;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _authCodeGenerator = authCodeGenerator;
         }
 
         [HttpGet("authorize")]
@@ -49,11 +52,31 @@ namespace AuthorizationServer.Controllers
                     return error;
                 }
 
-                return View("AuthorizationLogin");
+                ViewData["RedirectUri"] = redirectUris[0];
+                return View("AuthorizationLogin", HttpUtility.UrlEncode(redirectUris[0]));
             }
 
             return null;
         }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromForm] string username, 
+            [FromForm] string password, [FromQuery(Name = "redirect_uri")] string redirectUri)
+        {
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                return BadRequest("Username and password fields are required!");
+            }
+
+            if (username == "tarik" && password == "guney")
+            {
+                var authCode = _authCodeGenerator.Generate(username);
+                return Redirect(redirectUri+"?code=" + authCode);
+            }
+
+            return Unauthorized("You are not a valid user in the system. Please check your username and password.");
+        }
+
 
         [HttpPost("token")]
         public IActionResult GetAccessToken()

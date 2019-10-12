@@ -29,9 +29,12 @@
         </e>
         <e p="Startup.cs" t="Include" />
         <e p="TokenManagement" t="Include">
+          <e p="AuthorizationCodeGenerator.cs" t="Include" />
           <e p="HmacAlgorithm.cs" t="Include" />
+          <e p="IAuthorizationCodeGenerator.cs" t="Include" />
           <e p="IJWTTokenGenerator.cs" t="Include" />
           <e p="JwtToken.cs" t="Include" />
+          <e p="JwtTokenGenerator.cs" t="Include" />
         </e>
         <e p="Views" t="Include">
           <e p="OAuth" t="Include">
