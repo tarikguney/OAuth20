@@ -6,5 +6,10 @@ namespace AuthorizationServer.IdentityManagement
         {
             return clientId == "tarik" && clientSecret == "guney";
         }
+
+        public bool IsValidClient(string clientId)
+        {
+            return clientId == "tarik";
+        }
     }
 }
