@@ -28,6 +28,7 @@ I always welcome PRs from the community. As you may know, this project is develo
 
 ## Changes `(order by timestamp desc)`
 
+- **[10/12/2019]** Implemented a simple authorization endpoints. Allows people to log in to get the authorization code. 
 - **[10/06/2019]** Returning correctly formatted response for `access_token` request for both successful and erroneous  situations.
 - [Older Date] JWT Token generation is now working.
 - [Older Date] Tested with Postman and works nice! Try it yourself

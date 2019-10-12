@@ -1,0 +1,39 @@
+
+@model string
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div>
+    <form action="/api/oauth2/login?redirect_uri=@Model" method="post">
+        <table>
+            <tr>
+                <td>Username: </td>
+                <td>
+                    <input type="text" name="username"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td>
+                    <input type="password" name="password"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Log In</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>
