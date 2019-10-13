@@ -6,6 +6,7 @@ using System.Web;
 using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.TokenManagement;
 using Microsoft.AspNetCore.Mvc;
+using NeoSmart.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -18,7 +19,8 @@ namespace AuthorizationServer.Controllers
         private readonly IJWTTokenGenerator _jwtTokenGenerator;
         private readonly IAuthorizationCodeGenerator _authCodeGenerator;
 
-        public OAuthController(IClientManager clientManager, IJWTTokenGenerator jwtTokenGenerator, IAuthorizationCodeGenerator authCodeGenerator)
+        public OAuthController(IClientManager clientManager, IJWTTokenGenerator jwtTokenGenerator,
+            IAuthorizationCodeGenerator authCodeGenerator)
         {
             _clientManager = clientManager;
             _jwtTokenGenerator = jwtTokenGenerator;
@@ -41,40 +43,61 @@ namespace AuthorizationServer.Controllers
                 return error;
             }
 
-            if (responseTypes[0] == "code")
+            if (!_clientManager.IsValidClient(clientIds[0]))
             {
-                if (!_clientManager.IsValidClient(clientIds[0]))
+                var error = new JsonResult(new ErrorResponse
                 {
-                    var error = new JsonResult(new ErrorResponse
-                    {
-                        Error = ErrorTypeEnum.InvalidClient
-                    }) {StatusCode = (int) HttpStatusCode.Unauthorized};
-                    return error;
-                }
-
-                ViewData["RedirectUri"] = redirectUris[0];
-                return View("AuthorizationLogin", HttpUtility.UrlEncode(redirectUris[0]));
+                    Error = ErrorTypeEnum.InvalidClient
+                }) {StatusCode = (int) HttpStatusCode.Unauthorized};
+                return error;
             }
 
-            return null;
+            ViewData["RedirectUri"] = redirectUris[0];
+            ViewData["ResponseType"] = responseTypes[0];
+
+            return View("AuthorizationLogin");
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromForm] string username, 
-            [FromForm] string password, [FromQuery(Name = "redirect_uri")] string redirectUri)
+        public IActionResult Login([FromForm] string username,
+            [FromForm] string password,
+            [FromQuery(Name = "redirect_uri")] string redirectUri,
+            [FromQuery(Name = "response_type")] string responseType)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
                 return BadRequest("Username and password fields are required!");
             }
 
-            if (username == "tarik" && password == "guney")
+            if (username != "tarik" || password != "guney")
             {
-                var authCode = _authCodeGenerator.Generate(username);
-                return Redirect(redirectUri+"?code=" + authCode);
+                return Unauthorized("You are not a valid user in the system. Please check your username and password.");
             }
 
-            return Unauthorized("You are not a valid user in the system. Please check your username and password.");
+            if (responseType == "implicit")
+            {
+                var token = new AccessTokenResponse
+                {
+                    AccessToken = _jwtTokenGenerator.GenerateToken($"{username}_{password}"),
+                    ExpiresIn = (int) TimeSpan.FromMinutes(10).TotalSeconds,
+                    TokenType = "Bearer"
+                };
+
+                return Redirect(
+                    $"{redirectUri}#access_token={token.AccessToken}&expires_in={token.ExpiresIn}&token_type={token.TokenType}");
+            }
+
+            if (responseType == "code")
+            {
+                var authCode = _authCodeGenerator.Generate(username);
+                return Redirect(redirectUri + "?code=" + authCode);
+            }
+
+            var error = new JsonResult(new ErrorResponse
+            {
+                Error = ErrorTypeEnum.InvalidRequest
+            }) {StatusCode = (int) HttpStatusCode.Unauthorized};
+            return error;
         }
 
 
