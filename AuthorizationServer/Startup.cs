@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AuthorizationServer.Flows;
 using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.TokenManagement;
 using Microsoft.AspNetCore.Builder;
@@ -29,9 +30,21 @@ namespace AuthorizationServer
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IClientManager, ClientManager>();
-            services.AddSingleton<IJWTTokenGenerator, JwtTokenGenerator>();
+            services.AddSingleton<IJWTGenerator, JWTGenerator>();
             services.AddSingleton<IAuthorizationCodeGenerator, AuthorizationCodeGenerator>();
-            
+            services.AddSingleton(AuthorizationFlowFactory);
+        }
+
+
+        private static IReadOnlyDictionary<AuthorizationFlowType, IAuthorizationEndpointFlow> AuthorizationFlowFactory(IServiceProvider provider)
+        {
+            var jwtGenerator = provider.GetService<IJWTGenerator>();
+            var authCodeGen = provider.GetService<IAuthorizationCodeGenerator>();
+            return new Dictionary<AuthorizationFlowType, IAuthorizationEndpointFlow>
+            {
+                {AuthorizationFlowType.Implicit, new ImplicitFlow(authCodeGen, jwtGenerator)},
+                {AuthorizationFlowType.AuthorizationCode, new AuthorizationCodeFlow(authCodeGen)}
+            };
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

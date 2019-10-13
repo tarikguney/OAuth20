@@ -12,6 +12,12 @@
         <e p="Controllers" t="Include">
           <e p="OAuthController.cs" t="Include" />
         </e>
+        <e p="Flows" t="Include">
+          <e p="AuthorizationCodeFlow.cs" t="Include" />
+          <e p="AuthorizationFlowModel.cs" t="Include" />
+          <e p="AuthorizationFlowType.cs" t="Include" />
+          <e p="IAuthorizationEndpointFlow.cs" t="Include" />
+        </e>
         <e p="IdentityManagement" t="Include">
           <e p="ClientManager.cs" t="Include" />
           <e p="IClientManager.cs" t="Include" />
@@ -32,7 +38,7 @@
           <e p="AuthorizationCodeGenerator.cs" t="Include" />
           <e p="HmacAlgorithm.cs" t="Include" />
           <e p="IAuthorizationCodeGenerator.cs" t="Include" />
-          <e p="IJWTTokenGenerator.cs" t="Include" />
+          <e p="IJWTGenerator.cs" t="Include" />
           <e p="JwtToken.cs" t="Include" />
           <e p="JwtTokenGenerator.cs" t="Include" />
         </e>

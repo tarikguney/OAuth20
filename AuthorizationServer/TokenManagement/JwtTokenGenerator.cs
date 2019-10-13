@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace AuthorizationServer.TokenManagement
 {
-    class JwtTokenGenerator : IJWTTokenGenerator
+    class JWTGenerator : IJWTGenerator
     {
         public string GenerateToken(string secret)
         {

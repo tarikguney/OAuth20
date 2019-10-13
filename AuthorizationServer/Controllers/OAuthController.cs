@@ -1,12 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Web;
+using AuthorizationServer.Flows;
 using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.TokenManagement;
 using Microsoft.AspNetCore.Mvc;
-using NeoSmart.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -16,15 +16,18 @@ namespace AuthorizationServer.Controllers
     public class OAuthController : Controller
     {
         private readonly IClientManager _clientManager;
-        private readonly IJWTTokenGenerator _jwtTokenGenerator;
+        private readonly IJWTGenerator _jwtGenerator;
         private readonly IAuthorizationCodeGenerator _authCodeGenerator;
+        private readonly IReadOnlyDictionary<AuthorizationFlowType, IAuthorizationEndpointFlow> _authFlowDictionary;
 
-        public OAuthController(IClientManager clientManager, IJWTTokenGenerator jwtTokenGenerator,
-            IAuthorizationCodeGenerator authCodeGenerator)
+        public OAuthController(IClientManager clientManager, IJWTGenerator jwtGenerator,
+            IAuthorizationCodeGenerator authCodeGenerator,
+            IReadOnlyDictionary<AuthorizationFlowType, IAuthorizationEndpointFlow> authFlowDictionary)
         {
             _clientManager = clientManager;
-            _jwtTokenGenerator = jwtTokenGenerator;
+            _jwtGenerator = jwtGenerator;
             _authCodeGenerator = authCodeGenerator;
+            _authFlowDictionary = authFlowDictionary;
         }
 
         [HttpGet("authorize")]
@@ -54,43 +57,34 @@ namespace AuthorizationServer.Controllers
 
             ViewData["RedirectUri"] = redirectUris[0];
             ViewData["ResponseType"] = responseTypes[0];
+            ViewData["ClientId"] = clientIds[0];
 
             return View("AuthorizationLogin");
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromForm] string username,
-            [FromForm] string password,
-            [FromQuery(Name = "redirect_uri")] string redirectUri,
-            [FromQuery(Name = "response_type")] string responseType)
+        public IActionResult Login(AuthorizationFlowModel model)
         {
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
             {
                 return BadRequest("Username and password fields are required!");
             }
 
-            if (username != "tarik" || password != "guney")
+            if (model.Username != "tarik" || model.Password != "guney")
             {
                 return Unauthorized("You are not a valid user in the system. Please check your username and password.");
             }
 
-            if (responseType == "implicit")
+            if (model.ResponseType == "implicit")
             {
-                var token = new AccessTokenResponse
-                {
-                    AccessToken = _jwtTokenGenerator.GenerateToken($"{username}_{password}"),
-                    ExpiresIn = (int) TimeSpan.FromMinutes(10).TotalSeconds,
-                    TokenType = "Bearer"
-                };
-
-                return Redirect(
-                    $"{redirectUri}#access_token={token.AccessToken}&expires_in={token.ExpiresIn}&token_type={token.TokenType}");
+                var flow = _authFlowDictionary[AuthorizationFlowType.Implicit];
+                return Redirect(flow.BuildRedirectionUri(model).AbsoluteUri);
             }
 
-            if (responseType == "code")
+            if (model.ResponseType == "code")
             {
-                var authCode = _authCodeGenerator.Generate(username);
-                return Redirect(redirectUri + "?code=" + authCode);
+                var flow = _authFlowDictionary[AuthorizationFlowType.AuthorizationCode];
+                return Redirect(flow.BuildRedirectionUri(model).AbsoluteUri);
             }
 
             var error = new JsonResult(new ErrorResponse
@@ -127,7 +121,7 @@ namespace AuthorizationServer.Controllers
 
                 var success = new JsonResult(new AccessTokenResponse
                 {
-                    AccessToken = _jwtTokenGenerator.GenerateToken(clientSecret),
+                    AccessToken = _jwtGenerator.GenerateToken(clientSecret),
                     ExpiresIn = (int) TimeSpan.FromMinutes(10).TotalSeconds,
                     TokenType = "Bearer"
                 }) {StatusCode = (int) HttpStatusCode.OK};
@@ -144,9 +138,11 @@ namespace AuthorizationServer.Controllers
             [JsonConverter(typeof(StringEnumConverter))]
             public ErrorTypeEnum Error { get; set; }
 
-            [JsonProperty("error_description")] public string ErrorDescription { get; set; }
+            [JsonProperty("error_description")]
+            public string ErrorDescription { get; set; }
 
-            [JsonProperty("error_uri")] public string ErrorUri { get; set; }
+            [JsonProperty("error_uri")]
+            public string ErrorUri { get; set; }
         }
 
         public enum ErrorTypeEnum
@@ -154,9 +150,11 @@ namespace AuthorizationServer.Controllers
             [EnumMember(Value = "invalid_request")]
             InvalidRequest,
 
-            [EnumMember(Value = "invalid_client")] InvalidClient,
+            [EnumMember(Value = "invalid_client")]
+            InvalidClient,
 
-            [EnumMember(Value = "invalid_grant")] InvalidGrant,
+            [EnumMember(Value = "invalid_grant")]
+            InvalidGrant,
 
             [EnumMember(Value = "unauthorized_client")]
             UnauthorizedClient,
@@ -167,11 +165,14 @@ namespace AuthorizationServer.Controllers
 
         public class AccessTokenResponse
         {
-            [JsonProperty("access_token")] public string AccessToken { get; set; }
+            [JsonProperty("access_token")]
+            public string AccessToken { get; set; }
 
-            [JsonProperty("token_type")] public string TokenType { get; set; }
+            [JsonProperty("token_type")]
+            public string TokenType { get; set; }
 
-            [JsonProperty("expires_in")] public int ExpiresIn { get; set; }
+            [JsonProperty("expires_in")]
+            public int ExpiresIn { get; set; }
         }
     }
 }
