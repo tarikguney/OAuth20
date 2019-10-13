@@ -7,29 +7,31 @@ namespace AuthorizationServer.Flows
     public class AuthorizationFlowModel
     {
         [JsonProperty("response_type")]
-        [FromQuery(Name="response_type")]
+        [BindProperty(Name = "response_type")]
         public string ResponseType { get; set; }
 
         [JsonProperty("redirect_uri")]
-        [FromQuery(Name="redirect_uri")]
+        [BindProperty(Name = "redirect_uri")]
         public string RedirectUri { get; set; }
 
         [JsonProperty("state")]
-        [FromQuery(Name="state")]
+        [BindProperty(Name = "state")]
         public string State { get; set; }
 
         [JsonProperty("client_id")]
-        [FromQuery(Name="client_id")]
+        [BindProperty(Name = "client_id")]
         public string ClientId { get; set; }
 
         [JsonProperty("scope")]
-        [FromQuery(Name="scope")]
+        [BindProperty(Name = "scope")]
         public string Scope { get; set; }
 
         [JsonProperty("username")]
+        [BindProperty(Name = "username")]
         public string Username { get; set; }
 
         [JsonProperty("password")]
+        [BindProperty(Name = "password")]
         public string Password { get; set; }
     }
 }

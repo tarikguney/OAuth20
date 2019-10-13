@@ -13,7 +13,7 @@
 <body>
 <div>
     <form
-        action="/api/oauth2/login?redirect_uri=@ViewData["RedirectUri"]&response_type=@ViewData["ResponseType"]&client_id=@ViewData["ClientId"]" method="post">
+        action="/api/oauth2/login" method="post">
         <table>
             <tr>
                 <td>Username: </td>
@@ -29,6 +29,9 @@
             </tr>
             <tr>
                 <td colspan="2">
+                    <input type="hidden" name="client_id" value="@ViewData["ClientId"]"/>
+                    <input type="hidden" name="redirect_uri" value="@ViewData["RedirectUri"]"/>
+                    <input type="hidden" name="response_type" value="@ViewData["ResponseType"]"/>
                     <button type="submit">Log In</button>
                 </td>
             </tr>
