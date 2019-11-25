@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Runtime.Serialization;
 using System.Text;
 using AuthorizationServer.Flows;
 using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.TokenManagement;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace AuthorizationServer.Controllers
 {
@@ -130,49 +127,6 @@ namespace AuthorizationServer.Controllers
 
             return Ok();
         }
-
-
-        public class ErrorResponse
-        {
-            [JsonProperty("error")]
-            [JsonConverter(typeof(StringEnumConverter))]
-            public ErrorTypeEnum Error { get; set; }
-
-            [JsonProperty("error_description")]
-            public string ErrorDescription { get; set; }
-
-            [JsonProperty("error_uri")]
-            public string ErrorUri { get; set; }
-        }
-
-        public enum ErrorTypeEnum
-        {
-            [EnumMember(Value = "invalid_request")]
-            InvalidRequest,
-
-            [EnumMember(Value = "invalid_client")]
-            InvalidClient,
-
-            [EnumMember(Value = "invalid_grant")]
-            InvalidGrant,
-
-            [EnumMember(Value = "unauthorized_client")]
-            UnauthorizedClient,
-
-            [EnumMember(Value = "unsupported_grant_type")]
-            UnsupportedGrantType
-        }
-
-        public class AccessTokenResponse
-        {
-            [JsonProperty("access_token")]
-            public string AccessToken { get; set; }
-
-            [JsonProperty("token_type")]
-            public string TokenType { get; set; }
-
-            [JsonProperty("expires_in")]
-            public int ExpiresIn { get; set; }
-        }
+        
     }
 }

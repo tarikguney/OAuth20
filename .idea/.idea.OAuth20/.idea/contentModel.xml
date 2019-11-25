@@ -10,6 +10,9 @@
         <e p="AuthorizationServer.csproj" t="IncludeRecursive" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
+          <e p="AccessTokenResponse.cs" t="Include" />
+          <e p="ErrorResponse.cs" t="Include" />
+          <e p="ErrorTypeEnum.cs" t="Include" />
           <e p="OAuthController.cs" t="Include" />
         </e>
         <e p="Flows" t="Include">
