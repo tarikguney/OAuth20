@@ -26,6 +26,10 @@ The secret used in the HMAC signature digest is `client_id`. Silly, but it is ho
 
 I always welcome PRs from the community. As you may know, this project is developed during live streams on my channel at http://youtube.com/tarikguneyphd. Currently, the videos are in Turkish but perhaps later we can have a summary video in English, too. Anyhow, please feel free to send me pull requests. 
 
+## Suggestions
+
+- Use `Guid.NewGuid().ToString("N")` to generate unique `authorization_code` `code` values.
+
 ## Changes `(order by timestamp desc)`
 
 - **[11/25/2019]** - Implemented access token request for authorization code grant type, and renamed `IAuthorizationEndpointFlow` to `IGrant` along with some other small code clean up and refactorings.
