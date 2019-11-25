@@ -3,7 +3,7 @@ using AuthorizationServer.TokenManagement;
 
 namespace AuthorizationServer.Flows
 {
-    public class AuthorizationCodeFlow : IAuthorizationEndpointFlow
+    public class AuthorizationCodeFlow : IGrantFlow, IAuthorizationCodeValidator
     {
         private readonly IAuthorizationCodeGenerator _authorizationCodeGenerator;
 
@@ -17,5 +17,11 @@ namespace AuthorizationServer.Flows
             var authCode = _authorizationCodeGenerator.Generate(model.ClientId);
             return new Uri(model.RedirectUri + "?code=" + authCode);
         }
+
+        public bool IsValidAuthorizationCode(string code, string clientId)
+        {
+            return true;
+        }
+        
     }
 }

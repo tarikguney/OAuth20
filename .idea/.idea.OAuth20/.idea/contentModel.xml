@@ -13,13 +13,15 @@
           <e p="AccessTokenResponse.cs" t="Include" />
           <e p="ErrorResponse.cs" t="Include" />
           <e p="ErrorTypeEnum.cs" t="Include" />
+          <e p="GrantType.cs" t="Include" />
           <e p="OAuthController.cs" t="Include" />
         </e>
         <e p="Flows" t="Include">
           <e p="AuthorizationCodeFlow.cs" t="Include" />
           <e p="AuthorizationFlowModel.cs" t="Include" />
           <e p="AuthorizationFlowType.cs" t="Include" />
-          <e p="IAuthorizationEndpointFlow.cs" t="Include" />
+          <e p="IAuthorizationCodeValidator.cs" t="Include" />
+          <e p="IGrantFlow.cs" t="Include" />
         </e>
         <e p="IdentityManagement" t="Include">
           <e p="ClientManager.cs" t="Include" />

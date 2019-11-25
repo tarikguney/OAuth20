@@ -3,12 +3,12 @@ using AuthorizationServer.TokenManagement;
 
 namespace AuthorizationServer.Flows
 {
-    public interface IAuthorizationEndpointFlow
+    public interface IGrantFlow
     {
         Uri BuildRedirectionUri(AuthorizationFlowModel model);
     }
 
-    public class ImplicitFlow : IAuthorizationEndpointFlow
+    public class ImplicitFlow : IGrantFlow
     {
         private readonly IAuthorizationCodeGenerator _authorizationCodeGenerator;
         private readonly IJWTGenerator _jwtGenerator;

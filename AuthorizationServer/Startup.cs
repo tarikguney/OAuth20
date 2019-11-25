@@ -33,14 +33,15 @@ namespace AuthorizationServer
             services.AddSingleton<IJWTGenerator, JWTGenerator>();
             services.AddSingleton<IAuthorizationCodeGenerator, AuthorizationCodeGenerator>();
             services.AddSingleton(AuthorizationFlowFactory);
+            services.AddSingleton<IAuthorizationCodeValidator, AuthorizationCodeFlow>();
         }
 
 
-        private static IReadOnlyDictionary<AuthorizationFlowType, IAuthorizationEndpointFlow> AuthorizationFlowFactory(IServiceProvider provider)
+        private static IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> AuthorizationFlowFactory(IServiceProvider provider)
         {
             var jwtGenerator = provider.GetService<IJWTGenerator>();
             var authCodeGen = provider.GetService<IAuthorizationCodeGenerator>();
-            return new Dictionary<AuthorizationFlowType, IAuthorizationEndpointFlow>
+            return new Dictionary<AuthorizationFlowType, IGrantFlow>
             {
                 {AuthorizationFlowType.Implicit, new ImplicitFlow(authCodeGen, jwtGenerator)},
                 {AuthorizationFlowType.AuthorizationCode, new AuthorizationCodeFlow(authCodeGen)}
