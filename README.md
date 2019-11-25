@@ -28,6 +28,7 @@ I always welcome PRs from the community. As you may know, this project is develo
 
 ## Changes `(order by timestamp desc)`
 
+- **[11/25/2019]** - Implemented access token request for authorization code grant type, and renamed `IAuthorizationEndpointFlow` to `IGrant` along with some other small code clean up and refactorings.
 - **[10/13/2019]** Implemented implicit flow, refactored the code a little bit, and extracted implicit and authorization code flows into their respective classes with one interface.
 - **[10/12/2019]** Implemented a simple authorization endpoints. Allows people to log in to get the authorization code. 
 - **[10/06/2019]** Returning correctly formatted response for `access_token` request for both successful and erroneous  situations.
