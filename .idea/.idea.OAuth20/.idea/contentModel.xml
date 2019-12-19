@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Tarik Guney\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Tarik Guney\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_OAuth20.-1104507898.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Tarik Guney\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Tarik Guney\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_OAuth20.-1104507898.00" t="ExcludeRecursive" />
     <e p="C:\Users\Tarik Guney\RiderProjects\OAuth20" t="IncludeFlat">
       <e p="AuthorizationServer" t="IncludeRecursive">
         <e p="appsettings.Development.json" t="Include" />
@@ -10,10 +10,6 @@
         <e p="AuthorizationServer.csproj" t="IncludeRecursive" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
-          <e p="AccessTokenResponse.cs" t="Include" />
-          <e p="ErrorResponse.cs" t="Include" />
-          <e p="ErrorTypeEnum.cs" t="Include" />
-          <e p="GrantType.cs" t="Include" />
           <e p="OAuthController.cs" t="Include" />
         </e>
         <e p="Flows" t="Include">
@@ -27,10 +23,17 @@
           <e p="ClientManager.cs" t="Include" />
           <e p="IClientManager.cs" t="Include" />
         </e>
+        <e p="Models" t="Include">
+          <e p="AccessTokenResponse.cs" t="Include" />
+          <e p="ErrorResponse.cs" t="Include" />
+          <e p="ErrorTypeEnum.cs" t="Include" />
+          <e p="GrantType.cs" t="Include" />
+        </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp2.2" t="Include">
               <e p="AuthorizationServer.AssemblyInfo.cs" t="Include" />
+              <e p="AuthorizationServer.RazorAssemblyInfo.cs" t="Include" />
             </e>
           </e>
         </e>
@@ -78,6 +81,7 @@
           <e p="Debug" t="Include">
             <e p="netcoreapp2.2" t="Include">
               <e p="ResourceServer.AssemblyInfo.cs" t="Include" />
+              <e p="ResourceServer.RazorAssemblyInfo.cs" t="Include" />
             </e>
           </e>
         </e>

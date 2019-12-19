@@ -1,4 +1,4 @@
-namespace AuthorizationServer.Controllers
+namespace AuthorizationServer.Models
 {
     public enum GrantType
     {

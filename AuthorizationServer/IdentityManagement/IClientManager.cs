@@ -1,4 +1,5 @@
 using AuthorizationServer.Controllers;
+using AuthorizationServer.Models;
 
 namespace AuthorizationServer.IdentityManagement
 {

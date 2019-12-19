@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace AuthorizationServer.Controllers
+namespace AuthorizationServer.Models
 {
     public class AccessTokenResponse
     {

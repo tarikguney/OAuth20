@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace AuthorizationServer.Controllers
+namespace AuthorizationServer.Models
 {
     public enum ErrorTypeEnum
     {
