@@ -7,6 +7,7 @@ using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.Models;
 using AuthorizationServer.TokenManagement;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace AuthorizationServer.Controllers
 {
@@ -107,14 +108,7 @@ namespace AuthorizationServer.Controllers
             {
                 case "client_credentials":
                 {
-                    var clientCredentials = Request.Headers["Authorization"][0];
-                    clientCredentials = clientCredentials.Replace("Basic ", "");
-                    var extractedCredentials =
-                        Encoding.UTF8.GetString(Convert.FromBase64String(clientCredentials)).Split(':');
-                    var clientId = extractedCredentials[0];
-                    var clientSecret = extractedCredentials[1];
-
-                    var validCredentials = _clientManager.ValidateClientCredentials(clientId, clientSecret);
+                    var (clientSecret, validCredentials) = ExtractAndValidateClientCredentials();
 
                     if (!validCredentials)
                     {
@@ -153,9 +147,53 @@ namespace AuthorizationServer.Controllers
 
                     return AccessToken(code);
                 }
+                case "password":
+                {
+                    var (clientSecret, validCredentials) = ExtractAndValidateClientCredentials();
+
+                    if (!validCredentials)
+                    {
+                        return InvalidClient();
+                    } 
+                    
+                    if (!Request.Form.ContainsKey("username") ||
+                        !Request.Form.ContainsKey("password") ||
+                        string.IsNullOrWhiteSpace(Request.Form["username"]) ||
+                        string.IsNullOrWhiteSpace(Request.Form["password"]))
+                    {
+                        return InvalidRequest();
+                    }
+
+                    var username = Request.Form["username"];
+                    var password = Request.Form["password"];
+                    
+                    // todo check if the username and password are valid. Create a new service that verifies
+                    // the username and password if passed.
+                    
+                    var success = new JsonResult(new AccessTokenResponse
+                    {
+                        AccessToken = _jwtGenerator.GenerateToken(clientSecret),
+                        ExpiresIn = (int) TimeSpan.FromMinutes(10).TotalSeconds,
+                        TokenType = "Bearer"
+                    }) {StatusCode = (int) HttpStatusCode.OK};
+                    return success;
+                }
                 default:
                     return UnsupportedGrantType();
             }
+        }
+
+        private (string clientSecret, bool validCredentials) ExtractAndValidateClientCredentials()
+        {
+            var clientCredentials = Request.Headers["Authorization"][0];
+            clientCredentials = clientCredentials.Replace("Basic ", "");
+            var extractedCredentials =
+                Encoding.UTF8.GetString(Convert.FromBase64String(clientCredentials)).Split(':');
+            var clientId = extractedCredentials[0];
+            var clientSecret = extractedCredentials[1];
+
+            var validCredentials = _clientManager.ValidateClientCredentials(clientId, clientSecret);
+            return (clientSecret, validCredentials);
         }
 
         private IActionResult AccessToken(string secret)
