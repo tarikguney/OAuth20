@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace AuthorizationServer.Flows
 {
     [BindProperties(SupportsGet = true)]
-    public class AuthorizationFlowModel
+    public class LoginModel
     {
         [JsonProperty("response_type")]
         [BindProperty(Name = "response_type")]

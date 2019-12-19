@@ -5,7 +5,7 @@ namespace AuthorizationServer.Flows
 {
     public interface IGrantFlow
     {
-        Uri BuildRedirectionUri(AuthorizationFlowModel model);
+        Uri BuildRedirectionUri(LoginModel model);
     }
 
     public class ImplicitFlow : IGrantFlow
@@ -20,7 +20,7 @@ namespace AuthorizationServer.Flows
             _jwtGenerator = jwtGenerator;
         }
 
-        public Uri BuildRedirectionUri(AuthorizationFlowModel model)
+        public Uri BuildRedirectionUri(LoginModel model)
         {
             var accessToken = _jwtGenerator.GenerateToken($"{model.Username}_{model.Password}");
             var expiresIn = (int) TimeSpan.FromMinutes(10).TotalSeconds;

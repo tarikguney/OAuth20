@@ -12,8 +12,7 @@
 </head>
 <body>
 <div>
-    <form
-        action="/api/oauth2/login" method="post">
+    <form action="/api/oauth2/login" method="post">
         <table>
             <tr>
                 <td>Username: </td>
@@ -33,6 +32,7 @@
                     <input type="hidden" name="redirect_uri" value="@ViewData["RedirectUri"]"/>
                     <input type="hidden" name="response_type" value="@ViewData["ResponseType"]"/>
                     <button type="submit">Log In</button>
+                    <!-- todo response_type can be intercepted and altered on the client side, which might be a security problem depending on the fact that if the user is registered with the specific grant types. -->
                 </td>
             </tr>
         </table>

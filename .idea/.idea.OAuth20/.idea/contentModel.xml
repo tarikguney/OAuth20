@@ -14,10 +14,10 @@
         </e>
         <e p="Flows" t="Include">
           <e p="AuthorizationCodeFlow.cs" t="Include" />
-          <e p="AuthorizationFlowModel.cs" t="Include" />
           <e p="AuthorizationFlowType.cs" t="Include" />
           <e p="IAuthorizationCodeValidator.cs" t="Include" />
           <e p="IGrantFlow.cs" t="Include" />
+          <e p="LoginModel.cs" t="Include" />
         </e>
         <e p="IdentityManagement" t="Include">
           <e p="ClientManager.cs" t="Include" />

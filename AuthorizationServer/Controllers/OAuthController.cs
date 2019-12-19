@@ -32,7 +32,7 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpGet("authorize")]
-        public IActionResult GetAuthorizationCode()
+        public IActionResult ShowLoginPage()
         {
             var responseTypes = Request.Query["response_type"];
             var clientIds = Request.Query["client_id"];
@@ -55,6 +55,8 @@ namespace AuthorizationServer.Controllers
                 }) {StatusCode = (int) HttpStatusCode.Unauthorized};
                 return error;
             }
+            
+            //todo Check if the responseType is in the recognized set of values. Otherwise, return invalid grant type response.
 
             ViewData["RedirectUri"] = redirectUris[0];
             ViewData["ResponseType"] = responseTypes[0];
@@ -64,7 +66,7 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(AuthorizationFlowModel model)
+        public IActionResult Login(LoginModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
             {

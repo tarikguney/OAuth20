@@ -12,7 +12,7 @@ namespace AuthorizationServer.Flows
             _authorizationCodeGenerator = authorizationCodeGenerator;
         }
 
-        public Uri BuildRedirectionUri(AuthorizationFlowModel model)
+        public Uri BuildRedirectionUri(LoginModel model)
         {
             var authCode = _authorizationCodeGenerator.Generate(model.ClientId);
             return new Uri(model.RedirectUri + "?code=" + authCode);
