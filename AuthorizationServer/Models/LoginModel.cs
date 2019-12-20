@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace AuthorizationServer.Flows
+namespace AuthorizationServer.Models
 {
     [BindProperties(SupportsGet = true)]
     public class LoginModel

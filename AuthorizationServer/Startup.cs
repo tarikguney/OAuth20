@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using AuthorizationServer.Flows;
+using AuthorizationServer.Flows.FlowResponses;
+using AuthorizationServer.Flows.TokenFlows;
 using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.TokenManagement;
 using AuthorizationServer.UserManagement;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AuthorizationCodeFlow = AuthorizationServer.Flows.TokenFlows.AuthorizationCodeFlow;
 
 namespace AuthorizationServer
 {
@@ -29,18 +32,31 @@ namespace AuthorizationServer
             services.AddSingleton<IJwtGenerator, MockJwtGenerator>();
             services.AddSingleton<IAuthorizationCodeGenerator, MockAuthorizationCodeGenerator>();
             services.AddSingleton(AuthorizationFlowFactory);
-            services.AddSingleton<IAuthorizationCodeValidator, AuthorizationCodeFlow>();
+            services.AddSingleton<IAuthorizationCodeValidator, Flows.AuthorizationCodeFlow>();
             services.AddSingleton<IUserCredentialValidator, MockUserCredentialValidator>();
+            services.AddSingleton<AuthorizationCodeFlow>();
+            services.AddSingleton<ClientCredentialsFlow>();
+            services.AddSingleton<PasswordFlow>();
+            services.AddSingleton<IFlowResponses, FlowResponses>();
+
+            services.AddSingleton<IReadOnlyDictionary<string, ITokenFlow>>(provider =>
+                new Dictionary<string, ITokenFlow>
+                {
+                    {"password", provider.GetService<PasswordFlow>()},
+                    {"authorization_code", provider.GetService<AuthorizationCodeFlow>()},
+                    {"client_credentials", provider.GetService<ClientCredentialsFlow>()}
+                });
         }
 
-        private static IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> AuthorizationFlowFactory(IServiceProvider provider)
+        private static IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> AuthorizationFlowFactory(
+            IServiceProvider provider)
         {
             var jwtGenerator = provider.GetService<IJwtGenerator>();
             var authCodeGen = provider.GetService<IAuthorizationCodeGenerator>();
             return new Dictionary<AuthorizationFlowType, IGrantFlow>
             {
                 {AuthorizationFlowType.Implicit, new ImplicitFlow(authCodeGen, jwtGenerator)},
-                {AuthorizationFlowType.AuthorizationCode, new AuthorizationCodeFlow(authCodeGen)}
+                {AuthorizationFlowType.AuthorizationCode, new Flows.AuthorizationCodeFlow(authCodeGen)}
             };
         }
 

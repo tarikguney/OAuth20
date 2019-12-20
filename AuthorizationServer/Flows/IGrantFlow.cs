@@ -1,4 +1,5 @@
 using System;
+using AuthorizationServer.Models;
 using AuthorizationServer.TokenManagement;
 
 namespace AuthorizationServer.Flows

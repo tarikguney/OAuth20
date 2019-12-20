@@ -1,12 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using AuthorizationServer.Flows;
+using AuthorizationServer.Flows.FlowResponses;
+using AuthorizationServer.Flows.TokenFlows;
 using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.Models;
-using AuthorizationServer.TokenManagement;
-using AuthorizationServer.UserManagement;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorizationServer.Controllers
@@ -15,21 +13,19 @@ namespace AuthorizationServer.Controllers
     public class OAuthController : Controller
     {
         private readonly IClientManager _clientManager;
-        private readonly IJwtGenerator _jwtGenerator;
-        private readonly IAuthorizationCodeValidator _authorizationCodeValidator;
+        private readonly IReadOnlyDictionary<string, ITokenFlow> _tokenFlowsByGrantTypes;
+        private readonly IFlowResponses _flowResponses;
         private readonly IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> _authFlowDictionary;
-        private readonly IUserCredentialValidator _userCredentialValidator;
 
-        public OAuthController(IClientManager clientManager, IJwtGenerator jwtGenerator,
-            IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> authFlowDictionary,
-            IUserCredentialValidator userCredentialValidator,
-            IAuthorizationCodeValidator authorizationCodeValidator)
+        public OAuthController(IClientManager clientManager,
+            IReadOnlyDictionary<string, ITokenFlow> tokenFlowsByGrantTypes,
+            IFlowResponses flowResponses,
+            IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> authFlowDictionary)
         {
             _clientManager = clientManager;
-            _jwtGenerator = jwtGenerator;
+            _tokenFlowsByGrantTypes = tokenFlowsByGrantTypes;
+            _flowResponses = flowResponses;
             _authFlowDictionary = authFlowDictionary;
-            _userCredentialValidator = userCredentialValidator;
-            _authorizationCodeValidator = authorizationCodeValidator;
         }
 
         [HttpGet("authorize")]
@@ -98,159 +94,13 @@ namespace AuthorizationServer.Controllers
             return error;
         }
 
-
         [HttpPost("token")]
         public IActionResult GetAccessToken()
         {
             var grantType = Request.Form["grant_type"];
-
-            switch (grantType)
-            {
-                case "client_credentials":
-                {
-                    var (clientSecret, validCredentials) = ExtractAndValidateClientCredentials();
-
-                    if (!validCredentials)
-                    {
-                        return InvalidClient();
-                    }
-
-                    var success = new JsonResult(new AccessTokenResponse
-                    {
-                        AccessToken = _jwtGenerator.GenerateToken(clientSecret),
-                        ExpiresIn = (int) TimeSpan.FromMinutes(10).TotalSeconds,
-                        TokenType = "Bearer"
-                    }) {StatusCode = (int) HttpStatusCode.OK};
-                    return success;
-                }
-                case "authorization_code":
-                {
-                    var code = Request.Form["code"];
-                    var redirectUri = Request.Form["redirect_uri"];
-                    var clientId = Request.Form["client_id"];
-
-                    if (string.IsNullOrWhiteSpace(clientId) || !_clientManager.IsValidClient(clientId))
-                    {
-                        return InvalidClient();
-                    }
-
-                    if (!_clientManager.AllowedToUseGrantType(clientId, GrantType.AuthorizationCode))
-                    {
-                        return UnauthorizedClient();
-                    }
-
-                    if (string.IsNullOrWhiteSpace(redirectUri) || string.IsNullOrWhiteSpace(code) ||
-                        !_authorizationCodeValidator.IsValidAuthorizationCode(code, clientId))
-                    {
-                        return InvalidRequest();
-                    }
-
-                    return AccessToken(code);
-                }
-                case "password":
-                {
-                    var (clientSecret, validCredentials) = ExtractAndValidateClientCredentials();
-
-                    if (!validCredentials)
-                    {
-                        return InvalidClient();
-                    }
-
-                    if (!Request.Form.ContainsKey("username") ||
-                        !Request.Form.ContainsKey("password") ||
-                        string.IsNullOrWhiteSpace(Request.Form["username"]) ||
-                        string.IsNullOrWhiteSpace(Request.Form["password"]))
-                    {
-                        return InvalidRequest();
-                    }
-
-                    var username = Request.Form["username"];
-                    var password = Request.Form["password"];
-
-                    if (!_userCredentialValidator.ValidateCredentials(username, password))
-                    {
-                        return InvalidGrant();
-                    }
-
-                    var success = new JsonResult(new AccessTokenResponse
-                    {
-                        AccessToken = _jwtGenerator.GenerateToken(clientSecret),
-                        ExpiresIn = (int) TimeSpan.FromMinutes(10).TotalSeconds,
-                        TokenType = "Bearer"
-                    }) {StatusCode = (int) HttpStatusCode.OK};
-                    return success;
-                }
-                default:
-                    return UnsupportedGrantType();
-            }
-        }
-
-        private (string clientSecret, bool validCredentials) ExtractAndValidateClientCredentials()
-        {
-            var clientCredentials = Request.Headers["Authorization"][0];
-            clientCredentials = clientCredentials.Replace("Basic ", "");
-            var extractedCredentials =
-                Encoding.UTF8.GetString(Convert.FromBase64String(clientCredentials)).Split(':');
-            var clientId = extractedCredentials[0];
-            var clientSecret = extractedCredentials[1];
-
-            var validCredentials = _clientManager.ValidateClientCredentials(clientId, clientSecret);
-            return (clientSecret, validCredentials);
-        }
-
-        private IActionResult AccessToken(string secret)
-        {
-            return new JsonResult(new AccessTokenResponse
-            {
-                AccessToken = _jwtGenerator.GenerateToken(secret),
-                ExpiresIn = (int) TimeSpan.FromMinutes(10).TotalSeconds,
-                TokenType = "Bearer"
-            }) {StatusCode = (int) HttpStatusCode.OK};
-        }
-
-        private IActionResult InvalidClient()
-        {
-            var error = new JsonResult(new ErrorResponse
-            {
-                Error = ErrorTypeEnum.InvalidClient
-            }) {StatusCode = (int) HttpStatusCode.BadRequest};
-            return error;
-        }
-
-        private IActionResult UnauthorizedClient()
-        {
-            var error = new JsonResult(new ErrorResponse
-            {
-                Error = ErrorTypeEnum.UnauthorizedClient
-            }) {StatusCode = (int) HttpStatusCode.BadRequest};
-            return error;
-        }
-
-        private IActionResult InvalidRequest()
-        {
-            var error = new JsonResult(new ErrorResponse
-            {
-                Error = ErrorTypeEnum.InvalidRequest
-            }) {StatusCode = (int) HttpStatusCode.BadRequest};
-            return error;
-        }
-
-        private IActionResult InvalidGrant()
-        {
-            var error = new JsonResult(new ErrorResponse
-            {
-                Error = ErrorTypeEnum.InvalidGrant
-            }) {StatusCode = (int) HttpStatusCode.BadRequest};
-            return error;
-        }
-
-        private IActionResult UnsupportedGrantType()
-        {
-            var error = new JsonResult(new ErrorResponse
-            {
-                Error = ErrorTypeEnum.UnsupportedGrantType
-            }) {StatusCode = (int) HttpStatusCode.BadRequest};
-            return error;
+            return !_tokenFlowsByGrantTypes.ContainsKey(grantType)
+                ? _flowResponses.UnsupportedGrantType()
+                : _tokenFlowsByGrantTypes[grantType].ProcessFlow(Request);
         }
     }
 }
