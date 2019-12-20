@@ -7,7 +7,6 @@ using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.Models;
 using AuthorizationServer.TokenManagement;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace AuthorizationServer.Controllers
 {
@@ -16,18 +15,15 @@ namespace AuthorizationServer.Controllers
     {
         private readonly IClientManager _clientManager;
         private readonly IJwtGenerator _jwtGenerator;
-        private readonly IAuthorizationCodeGenerator _authCodeGenerator;
         private readonly IAuthorizationCodeValidator _authorizationCodeValidator;
         private readonly IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> _authFlowDictionary;
 
         public OAuthController(IClientManager clientManager, IJwtGenerator jwtGenerator,
-            IAuthorizationCodeGenerator authCodeGenerator,
             IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> authFlowDictionary,
             IAuthorizationCodeValidator authorizationCodeValidator)
         {
             _clientManager = clientManager;
             _jwtGenerator = jwtGenerator;
-            _authCodeGenerator = authCodeGenerator;
             _authFlowDictionary = authFlowDictionary;
             _authorizationCodeValidator = authorizationCodeValidator;
         }
@@ -56,7 +52,7 @@ namespace AuthorizationServer.Controllers
                 }) {StatusCode = (int) HttpStatusCode.Unauthorized};
                 return error;
             }
-            
+
             //todo Check if the responseType is in the recognized set of values. Otherwise, return invalid grant type response.
 
             ViewData["RedirectUri"] = redirectUris[0];
@@ -154,8 +150,8 @@ namespace AuthorizationServer.Controllers
                     if (!validCredentials)
                     {
                         return InvalidClient();
-                    } 
-                    
+                    }
+
                     if (!Request.Form.ContainsKey("username") ||
                         !Request.Form.ContainsKey("password") ||
                         string.IsNullOrWhiteSpace(Request.Form["username"]) ||
@@ -166,10 +162,10 @@ namespace AuthorizationServer.Controllers
 
                     var username = Request.Form["username"];
                     var password = Request.Form["password"];
-                    
+
                     // todo check if the username and password are valid. Create a new service that verifies
                     // the username and password if passed.
-                    
+
                     var success = new JsonResult(new AccessTokenResponse
                     {
                         AccessToken = _jwtGenerator.GenerateToken(clientSecret),

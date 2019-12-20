@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AuthorizationServer.Flows;
 using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.TokenManagement;
 using AuthorizationServer.UserManagement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace AuthorizationServer
 {
@@ -32,13 +27,10 @@ namespace AuthorizationServer
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IClientManager, MockClientManager>();
             services.AddSingleton<IJwtGenerator, MockJwtGenerator>();
-            services.AddSingleton<IAuthorizationCodeGenerator, MockAuthorizationCodeGenerator>();
             services.AddSingleton(AuthorizationFlowFactory);
             services.AddSingleton<IAuthorizationCodeValidator, AuthorizationCodeFlow>();
             services.AddSingleton<IUserCredentialValidator, MockUserCredentialValidator>();
-            
         }
-
 
         private static IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> AuthorizationFlowFactory(IServiceProvider provider)
         {
