@@ -27,6 +27,7 @@ namespace AuthorizationServer
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IClientManager, MockClientManager>();
             services.AddSingleton<IJwtGenerator, MockJwtGenerator>();
+            services.AddSingleton<IAuthorizationCodeGenerator, MockAuthorizationCodeGenerator>();
             services.AddSingleton(AuthorizationFlowFactory);
             services.AddSingleton<IAuthorizationCodeValidator, AuthorizationCodeFlow>();
             services.AddSingleton<IUserCredentialValidator, MockUserCredentialValidator>();

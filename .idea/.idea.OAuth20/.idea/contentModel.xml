@@ -48,6 +48,7 @@
           <e p="IJWTGenerator.cs" t="Include" />
           <e p="JwtToken.cs" t="Include" />
           <e p="JwtTokenGenerator.cs" t="Include" />
+          <e p="MockAuthorizationCodeGenerator.cs" t="Include" />
         </e>
         <e p="UserManagement" t="Include">
           <e p="IUserCredentialValidator.cs" t="Include" />
