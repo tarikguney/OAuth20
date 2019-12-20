@@ -6,6 +6,7 @@ using AuthorizationServer.Flows;
 using AuthorizationServer.IdentityManagement;
 using AuthorizationServer.Models;
 using AuthorizationServer.TokenManagement;
+using AuthorizationServer.UserManagement;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorizationServer.Controllers
@@ -17,14 +18,17 @@ namespace AuthorizationServer.Controllers
         private readonly IJwtGenerator _jwtGenerator;
         private readonly IAuthorizationCodeValidator _authorizationCodeValidator;
         private readonly IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> _authFlowDictionary;
+        private readonly IUserCredentialValidator _userCredentialValidator;
 
         public OAuthController(IClientManager clientManager, IJwtGenerator jwtGenerator,
             IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> authFlowDictionary,
+            IUserCredentialValidator userCredentialValidator,
             IAuthorizationCodeValidator authorizationCodeValidator)
         {
             _clientManager = clientManager;
             _jwtGenerator = jwtGenerator;
             _authFlowDictionary = authFlowDictionary;
+            _userCredentialValidator = userCredentialValidator;
             _authorizationCodeValidator = authorizationCodeValidator;
         }
 
@@ -163,8 +167,10 @@ namespace AuthorizationServer.Controllers
                     var username = Request.Form["username"];
                     var password = Request.Form["password"];
 
-                    // todo check if the username and password are valid. Create a new service that verifies
-                    // the username and password if passed.
+                    if (!_userCredentialValidator.ValidateCredentials(username, password))
+                    {
+                        return InvalidGrant();
+                    }
 
                     var success = new JsonResult(new AccessTokenResponse
                     {
@@ -225,6 +231,15 @@ namespace AuthorizationServer.Controllers
             var error = new JsonResult(new ErrorResponse
             {
                 Error = ErrorTypeEnum.InvalidRequest
+            }) {StatusCode = (int) HttpStatusCode.BadRequest};
+            return error;
+        }
+
+        private IActionResult InvalidGrant()
+        {
+            var error = new JsonResult(new ErrorResponse
+            {
+                Error = ErrorTypeEnum.InvalidGrant
             }) {StatusCode = (int) HttpStatusCode.BadRequest};
             return error;
         }
