@@ -15,12 +15,12 @@ namespace AuthorizationServer.Controllers
     public class OAuthController : Controller
     {
         private readonly IClientManager _clientManager;
-        private readonly IJWTGenerator _jwtGenerator;
+        private readonly IJwtGenerator _jwtGenerator;
         private readonly IAuthorizationCodeGenerator _authCodeGenerator;
         private readonly IAuthorizationCodeValidator _authorizationCodeValidator;
         private readonly IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> _authFlowDictionary;
 
-        public OAuthController(IClientManager clientManager, IJWTGenerator jwtGenerator,
+        public OAuthController(IClientManager clientManager, IJwtGenerator jwtGenerator,
             IAuthorizationCodeGenerator authCodeGenerator,
             IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> authFlowDictionary,
             IAuthorizationCodeValidator authorizationCodeValidator)

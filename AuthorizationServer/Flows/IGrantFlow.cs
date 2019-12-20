@@ -11,10 +11,10 @@ namespace AuthorizationServer.Flows
     public class ImplicitFlow : IGrantFlow
     {
         private readonly IAuthorizationCodeGenerator _authorizationCodeGenerator;
-        private readonly IJWTGenerator _jwtGenerator;
+        private readonly IJwtGenerator _jwtGenerator;
 
         public ImplicitFlow(IAuthorizationCodeGenerator authorizationCodeGenerator,
-            IJWTGenerator jwtGenerator)
+            IJwtGenerator jwtGenerator)
         {
             _authorizationCodeGenerator = authorizationCodeGenerator;
             _jwtGenerator = jwtGenerator;

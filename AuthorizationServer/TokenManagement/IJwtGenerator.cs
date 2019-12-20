@@ -1,6 +1,6 @@
 namespace AuthorizationServer.TokenManagement
 {
-    public interface IJWTGenerator
+    public interface IJwtGenerator
     {
         string GenerateToken(string secret);
     }

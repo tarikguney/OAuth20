@@ -20,8 +20,8 @@
           <e p="LoginModel.cs" t="Include" />
         </e>
         <e p="IdentityManagement" t="Include">
-          <e p="ClientManager.cs" t="Include" />
           <e p="IClientManager.cs" t="Include" />
+          <e p="MockClientManager.cs" t="Include" />
         </e>
         <e p="Models" t="Include">
           <e p="AccessTokenResponse.cs" t="Include" />
@@ -43,12 +43,16 @@
         </e>
         <e p="Startup.cs" t="Include" />
         <e p="TokenManagement" t="Include">
-          <e p="AuthorizationCodeGenerator.cs" t="Include" />
           <e p="HmacAlgorithm.cs" t="Include" />
           <e p="IAuthorizationCodeGenerator.cs" t="Include" />
           <e p="IJWTGenerator.cs" t="Include" />
           <e p="JwtToken.cs" t="Include" />
           <e p="JwtTokenGenerator.cs" t="Include" />
+          <e p="MockAuthorizationCodeGenerator.cs" t="Include" />
+        </e>
+        <e p="UserManagement" t="Include">
+          <e p="IUserCredentialValidator.cs" t="Include" />
+          <e p="MockUserCredentialValidator.cs" t="Include" />
         </e>
         <e p="Views" t="Include">
           <e p="OAuth" t="Include">

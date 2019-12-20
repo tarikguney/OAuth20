@@ -1,9 +1,8 @@
-using AuthorizationServer.Controllers;
 using AuthorizationServer.Models;
 
 namespace AuthorizationServer.IdentityManagement
 {
-    class ClientManager : IClientManager
+    internal class MockClientManager : IClientManager
     {
         public bool ValidateClientCredentials(string clientId, string clientSecret)
         {

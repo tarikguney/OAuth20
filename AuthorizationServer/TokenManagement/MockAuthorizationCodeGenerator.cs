@@ -1,10 +1,9 @@
-using System;
 using System.Text;
 using NeoSmart.Utils;
 
 namespace AuthorizationServer.TokenManagement
 {
-    public class AuthorizationCodeGenerator: IAuthorizationCodeGenerator
+    public class MockAuthorizationCodeGenerator: IAuthorizationCodeGenerator
     {
         public string Generate(string clientId)
         {
