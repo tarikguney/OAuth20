@@ -47,7 +47,9 @@ namespace AuthorizationServer.Controllers
                 return error;
             }
 
-            if (!_clientManager.IsValidClient(clientIds[0]))
+            var clientId = clientIds[0];
+            
+            if (!_clientManager.IsValidClient(clientId))
             {
                 var error = new JsonResult(new ErrorResponse
                 {
@@ -56,14 +58,14 @@ namespace AuthorizationServer.Controllers
                 return error;
             }
 
-            if (!_clientGrantManager.ClientHasGrantType(clientIds[0]))
+            if (!_clientGrantManager.ClientHasGrantType(clientId))
             {
                 return _flowResponses.InvalidGrant();
             }
 
             ViewData["RedirectUri"] = redirectUris[0];
             ViewData["ResponseType"] = responseTypes[0];
-            ViewData["ClientId"] = clientIds[0];
+            ViewData["ClientId"] = clientId;
 
             return View("AuthorizationLogin");
         }
