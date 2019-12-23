@@ -15,16 +15,19 @@ namespace AuthorizationServer.Controllers
         private readonly IClientManager _clientManager;
         private readonly IReadOnlyDictionary<string, ITokenFlow> _tokenFlowsByGrantTypes;
         private readonly IFlowResponses _flowResponses;
+        private readonly IClientGrantManager _clientGrantManager;
         private readonly IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> _authFlowDictionary;
 
         public OAuthController(IClientManager clientManager,
             IReadOnlyDictionary<string, ITokenFlow> tokenFlowsByGrantTypes,
             IFlowResponses flowResponses,
+            IClientGrantManager clientGrantManager,
             IReadOnlyDictionary<AuthorizationFlowType, IGrantFlow> authFlowDictionary)
         {
             _clientManager = clientManager;
             _tokenFlowsByGrantTypes = tokenFlowsByGrantTypes;
             _flowResponses = flowResponses;
+            _clientGrantManager = clientGrantManager;
             _authFlowDictionary = authFlowDictionary;
         }
 
@@ -53,7 +56,10 @@ namespace AuthorizationServer.Controllers
                 return error;
             }
 
-            //todo Check if the responseType is in the recognized set of values. Otherwise, return invalid grant type response.
+            if (!_clientGrantManager.ClientHasGrantType(clientIds[0]))
+            {
+                return _flowResponses.InvalidGrant();
+            }
 
             ViewData["RedirectUri"] = redirectUris[0];
             ViewData["ResponseType"] = responseTypes[0];

@@ -38,6 +38,8 @@ namespace AuthorizationServer
             services.AddSingleton<ClientCredentialsFlow>();
             services.AddSingleton<PasswordFlow>();
             services.AddSingleton<IFlowResponses, FlowResponses>();
+            services.AddSingleton<IClientGrantManager, MockClientGrantManager>();
+            
 
             services.AddSingleton<IReadOnlyDictionary<string, ITokenFlow>>(provider =>
                 new Dictionary<string, ITokenFlow>

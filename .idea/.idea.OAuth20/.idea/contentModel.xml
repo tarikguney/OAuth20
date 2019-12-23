@@ -29,7 +29,9 @@
           </e>
         </e>
         <e p="IdentityManagement" t="Include">
+          <e p="IClientGrantManager.cs" t="Include" />
           <e p="IClientManager.cs" t="Include" />
+          <e p="MockClientGrantManager.cs" t="Include" />
           <e p="MockClientManager.cs" t="Include" />
         </e>
         <e p="Models" t="Include">
