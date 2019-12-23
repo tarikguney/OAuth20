@@ -1,5 +1,4 @@
 using AuthorizationServer.Controllers;
-using AuthorizationServer.Models;
 
 namespace AuthorizationServer.IdentityManagement
 {
@@ -7,6 +6,5 @@ namespace AuthorizationServer.IdentityManagement
     {
         bool ValidateClientCredentials(string clientId, string clientSecret);
         bool IsValidClient(string clientId);
-        bool AllowedToUseGrantType(string clientId, GrantType grantType);
     }
 }

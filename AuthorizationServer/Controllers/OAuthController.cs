@@ -48,7 +48,7 @@ namespace AuthorizationServer.Controllers
             }
 
             var clientId = clientIds[0];
-            
+
             if (!_clientManager.IsValidClient(clientId))
             {
                 var error = new JsonResult(new ErrorResponse
@@ -58,7 +58,20 @@ namespace AuthorizationServer.Controllers
                 return error;
             }
 
-            if (!_clientGrantManager.ClientHasGrantType(clientId))
+            var responseType = responseTypes[0];
+            if (responseType != "token" || responseType == "implicit")
+            {
+                return _flowResponses.InvalidGrant();
+            }
+
+            // todo Think about moving such logic into its own scope. Maybe into the enum? Also, think about separating these to ResponseType and GrantType enums... Might be useful.
+            var parsedGrantType = responseType switch
+            {
+                "token" => GrantType.Implicit,
+                "code" => GrantType.AuthorizationCode
+            };
+
+            if (!_clientGrantManager.ClientHasGrantType(clientId, parsedGrantType))
             {
                 return _flowResponses.InvalidGrant();
             }

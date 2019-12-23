@@ -10,14 +10,17 @@ namespace AuthorizationServer.Flows.TokenFlows
     {
         private readonly IClientManager _clientManager;
         private readonly IAuthorizationCodeValidator _authorizationCodeValidator;
+        private readonly IClientGrantManager _clientGrantManager;
         private readonly IFlowResponses _flowResponses;
 
         public AuthorizationCodeFlow(IClientManager clientManager, 
             IAuthorizationCodeValidator authorizationCodeValidator,
+            IClientGrantManager clientGrantManager,
             IFlowResponses flowResponses)
         {
             _clientManager = clientManager;
             _authorizationCodeValidator = authorizationCodeValidator;
+            _clientGrantManager = clientGrantManager;
             _flowResponses = flowResponses;
         }
 
@@ -32,7 +35,7 @@ namespace AuthorizationServer.Flows.TokenFlows
                 return _flowResponses.InvalidClient();
             }
 
-            if (!_clientManager.AllowedToUseGrantType(clientId, GrantType.AuthorizationCode))
+            if (!_clientGrantManager.ClientHasGrantType(clientId, GrantType.AuthorizationCode))
             {
                 return _flowResponses.UnauthorizedClient();
             }

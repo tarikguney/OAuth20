@@ -1,5 +1,3 @@
-using AuthorizationServer.Models;
-
 namespace AuthorizationServer.IdentityManagement
 {
     internal class MockClientManager : IClientManager
@@ -12,11 +10,6 @@ namespace AuthorizationServer.IdentityManagement
         public bool IsValidClient(string clientId)
         {
             return clientId == "tarik";
-        }
-
-        public bool AllowedToUseGrantType(string clientId, GrantType grantType)
-        {
-            return true;
         }
     }
 }
