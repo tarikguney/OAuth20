@@ -1,8 +1,26 @@
-# OAuth 2.0 Authorization Server Implementation
+<img src="./assets/banner.png">
 
-The idea of this project is to write a simple OAuth 2.0 Authorization Server. Don't expect too much. It is progressing with baby steps.
+Table of Contents
+=================
 
-## Specifications
+<!--ts-->
+   * [What is it?](#what-is-it)
+   * [Specifications](#specifications)
+   * [Sample Postman Scripts](#sample-postman-scripts)
+   * [Verify Access Tokens](#verify-access-tokens)
+   * [Contribute](#contribute)
+   * [Suggestions](#suggestions)
+   * [Changes (order by timestamp desc)](#changes-order-by-timestamp-desc)
+
+<!-- Added by: tarikguney, at: Wed Dec 30 01:43:30 MST 2020 -->
+
+<!--te-->
+
+# What is it?
+
+The idea of this project is to write a simple OAuth 2.0 Authorization Server. Don't expect too much. It is progressing with baby steps. The code does not look great. Lots of things are hardcoded. It is more like a simple proof of concept application.
+
+# Specifications
 
 This project uses the following RFC documents as the specification for its implementation. The idea is to comply with the specs as much as possible with little or no diversion. 
 
@@ -10,27 +28,27 @@ This project uses the following RFC documents as the specification for its imple
 - [RFC 7519](https://tools.ietf.org/html/rfc7519) - JSON Web Token (JWT)
 - [RFC 6750](https://tools.ietf.org/html/rfc6750) - The OAuth 2.0 Authorization Framework: Bearer Token Usage
 
-## Sample Postman Scripts
+# Sample Postman Scripts
 
 The postman scripts will get updated as the code progress. 
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/0d9c03bf799e027cc8d0)
 
-## Verify Access Tokens
+# Verify Access Tokens
 
 The access token format this project uses is JWT bearer token. Therefore, you can verify the token there: https://www.jsonwebtoken.io/
 
 The secret used in the HMAC signature digest is `client_id`. Silly, but it is how things work for now.
 
-## Contribute
+# Contribute
 
 I always welcome PRs from the community. As you may know, this project is developed during live streams on my channel at http://youtube.com/tarikguneyphd. Currently, the videos are in Turkish but perhaps later we can have a summary video in English, too. Anyhow, please feel free to send me pull requests. 
 
-## Suggestions
+# Suggestions
 
 - Use `Guid.NewGuid().ToString("N")` to generate unique `authorization_code` `code` values.
 
-## Changes `(order by timestamp desc)`
+# Changes `(order by timestamp desc)`
 
 - **[12/20/2019]** - Implemented resource owner password grant type, did a huge refactoring to increase readability, and bunch of small changes here and there.
 - **[11/25/2019]** - Implemented access token request for authorization code grant type, and renamed `IAuthorizationEndpointFlow` to `IGrant` along with some other small code clean up and refactorings.
